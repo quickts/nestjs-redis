@@ -1,0 +1,1 @@
+export { RedisOptions } from "ioredis";
