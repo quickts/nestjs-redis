@@ -1,4 +1,4 @@
-import { Module, DynamicModule, Provider } from "@nestjs/common";
+import { Module, DynamicModule } from "@nestjs/common";
 import { RedisOptions } from "./redis.interface";
 import { createProvider } from "./redis.provider";
 
