@@ -1,7 +1,8 @@
-import { Module, DynamicModule } from "@nestjs/common";
+import { Global, Module, DynamicModule } from "@nestjs/common";
 import { RedisOptions } from "./redis.interface";
 import { createProvider } from "./redis.provider";
 
+@Global()
 @Module({})
 export class RedisModule {
     static forRoot(options: RedisOptions): DynamicModule {
