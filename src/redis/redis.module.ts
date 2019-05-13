@@ -5,8 +5,8 @@ import { createProvider } from "./redis.provider";
 @Global()
 @Module({})
 export class RedisModule {
-    static forRoot(options: RedisOptions): DynamicModule {
-        const provider = createProvider(options);
+    static forRoot(options: RedisOptions, token?: any): DynamicModule {
+        const provider = createProvider(options, token);
         return {
             module: RedisModule,
             providers: [provider],
