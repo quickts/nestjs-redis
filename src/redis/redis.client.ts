@@ -1,10 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Inject } from "@nestjs/common";
 import { createHash } from "crypto";
 import * as Redis from "ioredis";
+import { REDIS_OPTION } from "./redis.constants";
 
 @Injectable()
 export class RedisClient extends Redis {
     private shaCache: { [script: string]: string } = {};
+    constructor(@Inject(REDIS_OPTION) redisOptions?: Redis.RedisOptions) {
+        super(redisOptions);
+    }
 
     public executeCommand(cmd: string, ...args: any[]) {
         return (this as any)[cmd](...args);

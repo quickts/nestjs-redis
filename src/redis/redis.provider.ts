@@ -1,11 +1,12 @@
 import { Provider } from "@nestjs/common";
 import { RedisOptions } from "./redis.interface";
-import { RedisClient } from "./redis.client";
+import { REDIS_OPTION } from "./redis.constants";
 
-export function createProvider(redisOptions: RedisOptions, token?: any): Provider<RedisClient> {
-    const client = new RedisClient(redisOptions);
+export function createProvider(redisOptions?: RedisOptions): Provider {
     return {
-        provide: token === undefined ? RedisClient : token,
-        useValue: client
+        provide: REDIS_OPTION,
+        useFactory: function() {
+            return redisOptions;
+        }
     };
 }
