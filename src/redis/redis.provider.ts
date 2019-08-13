@@ -1,12 +1,10 @@
 import { Provider } from "@nestjs/common";
-import { RedisOptions } from "./redis.interface";
+import { RedisOptions } from "ioredis";
 import { REDIS_OPTION } from "./redis.constants";
 
-export function createProvider(redisOptions?: RedisOptions): Provider {
+export function createProvider(redisOptions: RedisOptions): Provider {
     return {
         provide: REDIS_OPTION,
-        useFactory: function() {
-            return redisOptions;
-        }
+        useValue: redisOptions
     };
 }

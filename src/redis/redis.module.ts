@@ -1,33 +1,30 @@
 import { Global, Module, DynamicModule } from "@nestjs/common";
-import { RedisOptions } from "./redis.interface";
+import { ScannerModule } from "@quickts/nestjs-scanner";
+import { RedisOptions } from "ioredis";
 import { createProvider } from "./redis.provider";
-import { RedisClient } from "./redis.client";
+import { RedisService } from "./redis.service";
 
-@Module({
-    providers: [RedisClient, createProvider()],
-    exports: [RedisClient]
-})
+@Module({})
 export class RedisModule {
     static forRoot(options: RedisOptions): DynamicModule {
         return {
             module: RedisModule,
-            providers: [RedisClient, createProvider(options)],
-            exports: [RedisClient]
+            imports: [ScannerModule.forRoot(false)],
+            providers: [RedisService, createProvider(options)],
+            exports: [RedisService]
         };
     }
 }
 
 @Global()
-@Module({
-    providers: [RedisClient, createProvider()],
-    exports: [RedisClient]
-})
+@Module({})
 export class RedisGlobalModule {
-    static forRoot(options?: RedisOptions): DynamicModule {
+    static forRoot(options: RedisOptions): DynamicModule {
         return {
             module: RedisGlobalModule,
-            providers: [RedisClient, createProvider(options)],
-            exports: [RedisClient]
+            imports: [ScannerModule.forRoot(true)],
+            providers: [RedisService, createProvider(options)],
+            exports: [RedisService]
         };
     }
 }

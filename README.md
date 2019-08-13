@@ -2,7 +2,8 @@
 
 ## Installation
 
-    $ npm install @quickts/nestjs-redis
+    $ npm install @quickts/nestjs-redis ioredis
+    $ npm install -D @types/ioredis
 
 ## Usage
 
@@ -18,11 +19,16 @@ import { RedisModule } from "@quickts/nestjs-redis";
 export class ApplicationModule {}
 
 // file: other.ts
-import { RedisClient } from "@quickts/nestjs-redis";
+import { RedisClient, OnRedisClientInit } from "@quickts/nestjs-redis";
+import { Redis } from "ioredis";
 
-class OtherService {
-    constructor(
-        private readonly redis: RedisClient // 注入client
-    ) {}
+@Injectable()
+class OtherService implements OnRedisClientInit {
+    @RedisClient()// 方式一: 使用装饰器注入
+    redis: Redis;
+
+    onRedisClientInit(redis: Redis){
+        this.redis = redis;// 方式二: 实现接口自行赋值
+    }
 }
 ```
