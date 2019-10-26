@@ -2,7 +2,8 @@ import { Injectable, Inject, Logger, OnModuleInit, OnModuleDestroy } from "@nest
 import { ScannerService } from "@quickts/nestjs-scanner";
 import { RedisOptions } from "ioredis";
 import * as IORedis from "ioredis";
-import { REDIS_OPTION, REDIS_CLIENT_METADATA } from "./redis.constants";
+import { REDIS_OPTION, REDIS_CLIENT_METADATA, COMMAND_ADDER } from "./redis.constants";
+import { CommandAdder } from "./redis.interface";
 
 @Injectable()
 export class RedisService implements OnModuleInit, OnModuleDestroy {
@@ -10,6 +11,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     private redisClient: IORedis.Redis = null;
     constructor(
         @Inject(REDIS_OPTION) private readonly redisOptions: RedisOptions, //
+        @Inject(COMMAND_ADDER) private readonly commandAdder: CommandAdder,
         private readonly scannerService: ScannerService
     ) {}
 
@@ -18,6 +20,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         this.redisClient.on("error", err => {
             this.logger.error(err);
         });
+
+        await this.commandAdder(this.redisClient);
+
         await this.scannerService.scanProviderPropertyMetadates(REDIS_CLIENT_METADATA, async (instance: any, propertyKey: string) => {
             instance[propertyKey] = this.redisClient;
         });
